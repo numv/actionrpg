@@ -24,18 +24,19 @@ public class Player : KinematicBody2D
 
 
 	AnimationTree animation;
+	AnimationPlayer BlinkAnimationPlayer;
 	AnimationNodeStateMachinePlayback animationState;
 	EState State = EState.move;
 	SwordHitbox swordHitbox;
-	Stats stats;
+	PlayerStats stats;
 	Hurtbox hurtbox;
+
+	static PackedScene sound_hurt = ResourceLoader.Load<PackedScene>("res://Player/PlayerHurtSound.tscn");
 
 	public override void _Ready()
 	{
-		stats = GetNode<Stats>("/root/PlayerStats");
-
+		stats = GetNode<PlayerStats>("/root/PlayerStats");
 		stats.Connect(nameof(Stats.NoHealth), this, nameof(OnNoHealth));
-
 		hurtbox = GetNode<Hurtbox>(nameof(Hurtbox));
 		animation = this.GetNode<AnimationTree>(nameof(AnimationTree));
 		animationState = animation.Get("parameters/playback") as AnimationNodeStateMachinePlayback;
@@ -43,9 +44,28 @@ public class Player : KinematicBody2D
 
 		swordHitbox = this.GetNode<SwordHitbox>("HitboxPivot/SwordHitbox");
 		swordHitbox.KnockbackVector = roll_velocity;
+		BlinkAnimationPlayer = this.GetNode<AnimationPlayer>(nameof(BlinkAnimationPlayer));
 	}
 
-	public void OnNoHealth() => QueueFree();
+	public void OnNoHealth()
+	{
+		var img = GetViewport().GetTexture().GetData();
+		stats.DeathImage = img;
+		img.FlipY();
+
+		QueueFree();
+		GetTree().ChangeScene("res://World/GameOverScreen.tscn");
+	}
+
+	public void OnInvincibilityEnded()
+	{
+		BlinkAnimationPlayer.Play("stop");
+	}
+
+	public void OnInvincibilityStarted()
+	{
+		BlinkAnimationPlayer.Play("start");
+	}
 
 	public override void _PhysicsProcess(float delta)
 	{
@@ -81,6 +101,9 @@ public class Player : KinematicBody2D
 			stats.Health -= hb.Damage;
 		hurtbox.CreateHitEffect();
 		hurtbox.Invincible = true;
+
+		var world = GetTree().CurrentScene;
+		world.AddChild(sound_hurt.Instance());
 	}
 
 	public void AttackState(float delta)

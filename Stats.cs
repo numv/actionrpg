@@ -3,8 +3,8 @@ using System;
 
 public class Stats : Node
 {
+	private int _maxHealth = 1;
 	[Export]
-	private int _maxHealth;
 	public int MaxHealth
 	{
 		get { return _maxHealth; }

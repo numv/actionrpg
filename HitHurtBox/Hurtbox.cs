@@ -13,13 +13,13 @@ public class Hurtbox : Area2D
 			_invincible = value;
 			if (_invincible)
 			{
-				SetDeferred("monitoring", false);
+				collisionShape.SetDeferred("disabled", true);
 				timer.Start(InvincibleDuration);
 				EmitSignal(nameof(OnInvincibilityStarted));
 			}
 			else
 			{
-				SetDeferred("monitoring", true);
+				collisionShape.SetDeferred("disabled", false);
 				EmitSignal(nameof(OnInvincibilityEnded));
 			}
 		}
@@ -38,9 +38,11 @@ public class Hurtbox : Area2D
 	static PackedScene effect_hit = ResourceLoader.Load<PackedScene>("res://Effects/HitEffect.tscn");
 
 	Timer timer;
+	CollisionShape2D collisionShape;
 	public override void _Ready()
 	{
 		timer = GetNode<Timer>(nameof(Timer));
+		collisionShape = GetNode<CollisionShape2D>(nameof(CollisionShape2D));
 	}
 
 	public void CreateHitEffect()

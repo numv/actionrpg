@@ -12,6 +12,9 @@ config_version=4
 
 config/name="RPG"
 run/main_scene="res://World.tscn"
+boot_splash/image="res://World/Bush.png"
+boot_splash/fullsize=false
+boot_splash/bg_color=Color( 0.231373, 0.431373, 0.392157, 1 )
 config/icon="res://icon.png"
 
 [autoload]
@@ -100,6 +103,7 @@ player_attack={
 2d_physics/layer_3="PlayerHurtbox"
 2d_physics/layer_4="EnemyHurtbox"
 2d_physics/layer_5="Enemy"
+2d_physics/layer_6="SoftCollision"
 
 [physics]
 

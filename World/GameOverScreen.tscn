@@ -1,0 +1,286 @@
+[gd_scene load_steps=27 format=2]
+
+[ext_resource path="res://World/GrassBackground.png" type="Texture" id=1]
+[ext_resource path="res://UI/HealthUI.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Music and Sounds/Hurt.wav" type="AudioStream" id=3]
+[ext_resource path="res://Music and Sounds/Music.mp3" type="AudioStream" id=4]
+[ext_resource path="res://Music and Sounds/EnemyDie.wav" type="AudioStream" id=5]
+[ext_resource path="res://World/GameOverScreen.cs" type="Script" id=6]
+[ext_resource path="res://UI/Hakubo.ttf" type="DynamicFontData" id=7]
+
+[sub_resource type="VisualShaderNodeColorOp" id=1]
+output_port_for_preview = 0
+operator = 8
+
+[sub_resource type="VisualShaderNodeInput" id=2]
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeColorUniform" id=3]
+uniform_name = "Color"
+
+[sub_resource type="VisualShaderNodeTextureUniform" id=4]
+uniform_name = "TextureUniform2"
+color_default = 1
+
+[sub_resource type="VisualShader" id=5]
+code = "shader_type canvas_item;
+uniform sampler2D TextureUniform2 : hint_black;
+uniform vec4 Color : hint_color;
+
+
+
+void vertex() {
+// Output:0
+
+}
+
+void fragment() {
+// Input:3
+	vec3 n_out3p0 = vec3(UV, 0.0);
+
+// TextureUniform:8
+	vec3 n_out8p0;
+	float n_out8p1;
+	{
+		vec4 n_tex_read = texture(TextureUniform2, n_out3p0.xy);
+		n_out8p0 = n_tex_read.rgb;
+		n_out8p1 = n_tex_read.a;
+	}
+
+// ColorUniform:7
+	vec3 n_out7p0 = Color.rgb;
+	float n_out7p1 = Color.a;
+
+// ColorOp:2
+	vec3 n_out2p0;
+	{
+		float base = n_out8p0.x;
+		float blend = n_out7p0.x;
+		if (base < 0.5) {
+			n_out2p0.x = (base * (2.0 * blend));
+		} else {
+			n_out2p0.x = (1.0 - (1.0 - base) * (1.0 - 2.0 * (blend - 0.5)));
+		}
+	}
+	{
+		float base = n_out8p0.y;
+		float blend = n_out7p0.y;
+		if (base < 0.5) {
+			n_out2p0.y = (base * (2.0 * blend));
+		} else {
+			n_out2p0.y = (1.0 - (1.0 - base) * (1.0 - 2.0 * (blend - 0.5)));
+		}
+	}
+	{
+		float base = n_out8p0.z;
+		float blend = n_out7p0.z;
+		if (base < 0.5) {
+			n_out2p0.z = (base * (2.0 * blend));
+		} else {
+			n_out2p0.z = (1.0 - (1.0 - base) * (1.0 - 2.0 * (blend - 0.5)));
+		}
+	}
+
+// Output:0
+	COLOR.rgb = n_out2p0;
+
+}
+
+void light() {
+// Output:0
+
+}
+"
+graph_offset = Vector2( -380, 132 )
+mode = 1
+flags/light_only = false
+nodes/fragment/0/position = Vector2( 660, 220 )
+nodes/fragment/2/node = SubResource( 1 )
+nodes/fragment/2/position = Vector2( 340, 320 )
+nodes/fragment/3/node = SubResource( 2 )
+nodes/fragment/3/position = Vector2( -340, 220 )
+nodes/fragment/7/node = SubResource( 3 )
+nodes/fragment/7/position = Vector2( -120, 440 )
+nodes/fragment/8/node = SubResource( 4 )
+nodes/fragment/8/position = Vector2( -40, 220 )
+nodes/fragment/connections = PoolIntArray( 7, 0, 2, 1, 2, 0, 0, 0, 3, 0, 8, 0, 8, 0, 2, 0 )
+
+[sub_resource type="ShaderMaterial" id=17]
+shader = SubResource( 5 )
+shader_param/Color = Color( 0.682353, 0.0705882, 0.0705882, 1 )
+shader_param/TextureUniform2 = ExtResource( 1 )
+
+[sub_resource type="DynamicFontData" id=18]
+font_path = "res://UI/Hakubo.ttf"
+
+[sub_resource type="DynamicFont" id=19]
+size = 18
+use_filter = true
+font_data = SubResource( 18 )
+
+[sub_resource type="DynamicFont" id=23]
+use_filter = true
+font_data = ExtResource( 7 )
+
+[sub_resource type="InputEventAction" id=24]
+action = "ui_accept"
+
+[sub_resource type="ShortCut" id=25]
+shortcut = SubResource( 24 )
+
+[sub_resource type="Animation" id=20]
+resource_name = "PlayDeath"
+length = 1.3
+tracks/0/type = "audio"
+tracks/0/path = NodePath("AudioStreamPlayer")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 3 )
+}, {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 3 )
+}, {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 5 )
+} ],
+"times": PoolRealArray( 0, 0.1, 0.2 )
+}
+
+[sub_resource type="Animation" id=21]
+resource_name = "PlayMusic"
+length = 117.0
+loop = true
+tracks/0/type = "audio"
+tracks/0/path = NodePath("AudioStreamPlayer")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 4 )
+} ],
+"times": PoolRealArray( 0 )
+}
+
+[sub_resource type="AnimationNodeAnimation" id=11]
+animation = "PlayDeath"
+
+[sub_resource type="AnimationNodeAnimation" id=14]
+animation = "PlayMusic"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=15]
+switch_mode = 2
+auto_advance = true
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=16]
+
+[sub_resource type="AnimationNodeStateMachine" id=12]
+states/PlayDeath/node = SubResource( 11 )
+states/PlayDeath/position = Vector2( 550, 99 )
+states/PlayMusic/node = SubResource( 14 )
+states/PlayMusic/position = Vector2( 800, 99 )
+transitions = [ "PlayDeath", "PlayMusic", SubResource( 15 ), "PlayMusic", "PlayDeath", SubResource( 16 ) ]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=22]
+
+[node name="GameOverScreen" type="Node2D"]
+script = ExtResource( 6 )
+
+[node name="Background" type="Sprite" parent="."]
+material = SubResource( 17 )
+texture = ExtResource( 1 )
+offset = Vector2( 160, 90 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 352, 224 )
+
+[node name="Control" type="CenterContainer" parent="."]
+margin_right = 320.0
+margin_bottom = 160.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox" type="VBoxContainer" parent="Control"]
+margin_left = 113.0
+margin_top = 47.0
+margin_right = 207.0
+margin_bottom = 113.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Control/VBox"]
+margin_right = 94.0
+margin_bottom = 19.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbGameOver" type="Label" parent="Control/VBox/HBoxContainer4"]
+margin_right = 94.0
+margin_bottom = 19.0
+rect_pivot_offset = Vector2( 168, 56 )
+custom_fonts/font = SubResource( 19 )
+text = "GAME OVER"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Control/VBox"]
+margin_top = 23.0
+margin_right = 94.0
+margin_bottom = 35.0
+
+[node name="HealthUI" parent="Control/VBox/HBoxContainer3" instance=ExtResource( 2 )]
+margin_right = 0.0
+rect_min_size = Vector2( 0, 12 )
+
+[node name="HBox" type="HBoxContainer" parent="Control/VBox"]
+margin_top = 39.0
+margin_right = 94.0
+margin_bottom = 39.0
+
+[node name="DeathImage" type="TextureRect" parent="Control/VBox/HBox"]
+
+[node name="HBoxBtn" type="HBoxContainer" parent="Control/VBox"]
+margin_top = 43.0
+margin_right = 94.0
+margin_bottom = 66.0
+alignment = 1
+
+[node name="Button" type="Button" parent="Control/VBox/HBoxBtn"]
+margin_left = 16.0
+margin_right = 77.0
+margin_bottom = 23.0
+custom_fonts/font = SubResource( 23 )
+shortcut_in_tooltip = false
+shortcut = SubResource( 25 )
+text = "restart"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/PlayDeath = SubResource( 20 )
+anims/PlayMusic = SubResource( 21 )
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource( 12 )
+anim_player = NodePath("../AnimationPlayer")
+parameters/playback = SubResource( 22 )
+
+[connection signal="pressed" from="Control/VBox/HBoxBtn/Button" to="." method="OnRestartPressed"]
