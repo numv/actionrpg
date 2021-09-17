@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="RPG"
-run/main_scene="res://World.tscn"
+run/main_scene="res://IntroScene.tscn"
 boot_splash/image="res://World/Bush.png"
 boot_splash/fullsize=false
 boot_splash/bg_color=Color( 0.231373, 0.431373, 0.392157, 1 )
