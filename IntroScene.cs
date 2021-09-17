@@ -9,14 +9,14 @@ public class IntroScene : Node2D
 
 		var sound = GetNode<AnimationTree>(nameof(AnimationTree));
 		var animationState = sound.Get("parameters/playback") as AnimationNodeStateMachinePlayback;
-		var rect = GetNode<TextureRect>("Control/VBox/HBox/DeathImage");
 		sound.Active = true;
 		animationState.Start("PlayDeath");
 	}
 
 	public void OnRestartPressed()
 	{
-		OS.WindowFullscreen = true;
+		if (!OS.IsDebugBuild())
+			OS.WindowFullscreen = true;
 		GetTree().ChangeScene("res://World.tscn");
 	}
 }

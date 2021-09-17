@@ -26,6 +26,7 @@ public class Bat : KinematicBody2D
 	static Random random = new Random();
 
 	static PackedScene effect_death = ResourceLoader.Load<PackedScene>("res://Effects/EnemyDeathEffect.tscn");
+	static PackedScene loot_potion_health = ResourceLoader.Load<PackedScene>("res://Loot/PotionHealth.tscn");
 
 	EState state = EState.idle;
 	AnimatedSprite sprite;
@@ -92,7 +93,7 @@ public class Bat : KinematicBody2D
 		if (force || wanderController.GetTimeLeft() == 0)
 		{
 			state = GetRandomState(EState.idle, EState.wander);
-			wanderController.StartTimer(random.Next(1, 3));
+			wanderController.StartTimer(random.Next(1, 4));
 		}
 	}
 
@@ -147,7 +148,23 @@ public class Bat : KinematicBody2D
 	public void OnStatsNoHealth()
 	{
 		CreateDeathEffect();
+		CallDeferred("DropLoot");
+
 		QueueFree();
+	}
+
+	public void DropLoot()
+	{
+		var lootId = random.Next(0, 2);
+		GD.Print("LootId:", lootId);
+		switch (lootId)
+		{
+			case 1: // health potion
+				var effect = loot_potion_health.Instance<PotionHealth>();
+				GetParent().AddChild(effect);
+				effect.GlobalPosition = this.GlobalPosition;
+				break;
+		}
 	}
 
 	public void CreateDeathEffect()

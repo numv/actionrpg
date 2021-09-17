@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Charge1.mp3-3da17703b2226db828ba62c232301c18.mp3str"
+
+[deps]
+
+source_file="res://Music and Sounds/Charge1.mp3"
+dest_files=[ "res://.import/Charge1.mp3-3da17703b2226db828ba62c232301c18.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

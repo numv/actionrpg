@@ -29,7 +29,7 @@ public class Player : KinematicBody2D
 	AnimationNodeStateMachinePlayback animationState;
 	EState State = EState.move;
 	SwordHitbox swordHitbox;
-	PlayerStats stats;
+	public PlayerStats stats;
 	Hurtbox hurtbox;
 
 
