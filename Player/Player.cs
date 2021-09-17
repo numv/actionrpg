@@ -19,6 +19,7 @@ public class Player : KinematicBody2D
 	[Export]
 	public int SpeedRoll = 125;
 
+	Vector2 joyInputVelocity = Vector2.Zero;
 	Vector2 velocity = Vector2.Zero;
 	Vector2 roll_velocity = Vector2.Down;
 
@@ -30,6 +31,7 @@ public class Player : KinematicBody2D
 	SwordHitbox swordHitbox;
 	PlayerStats stats;
 	Hurtbox hurtbox;
+
 
 	static PackedScene sound_hurt = ResourceLoader.Load<PackedScene>("res://Player/PlayerHurtSound.tscn");
 
@@ -57,6 +59,8 @@ public class Player : KinematicBody2D
 		GetTree().ChangeScene("res://World/GameOverScreen.tscn");
 	}
 
+
+
 	public void OnInvincibilityEnded()
 	{
 		BlinkAnimationPlayer.Play("stop");
@@ -65,6 +69,22 @@ public class Player : KinematicBody2D
 	public void OnInvincibilityStarted()
 	{
 		BlinkAnimationPlayer.Play("start");
+	}
+
+	public void Mobile_OnMoveVector(Vector2 pos)
+	{
+		joyInputVelocity = pos;
+	}
+
+	public void Mobile_OnAttack()
+	{
+		if (State == EState.move)
+			State = EState.attack;
+	}
+	public void Mobile_OnRoll()
+	{
+		if (State == EState.move)
+			State = EState.roll;
 	}
 
 	public override void _PhysicsProcess(float delta)
@@ -137,6 +157,17 @@ public class Player : KinematicBody2D
 		inputVelocity.y = Input.GetActionStrength("ui_down") - Input.GetActionStrength("ui_up");
 		inputVelocity = inputVelocity.Normalized();
 
+		if (inputVelocity == Vector2.Zero)
+		{
+			inputVelocity = joyInputVelocity;
+		}
+
+		CalculateVelocity(inputVelocity, delta);
+		Move();
+	}
+
+	private void CalculateVelocity(Vector2 inputVelocity, float delta)
+	{
 		if (inputVelocity != Vector2.Zero)
 		{
 			roll_velocity = inputVelocity;
@@ -154,7 +185,6 @@ public class Player : KinematicBody2D
 			animationState.Travel("idle");
 			velocity = velocity.MoveToward(Vector2.Zero, Friction * delta);
 		}
-		Move();
 	}
 
 	public void Move()

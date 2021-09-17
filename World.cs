@@ -18,5 +18,13 @@ public class World : Node2D
 	{
 		var bats = Bats.GetChildren().Count;
 		enemies.Text = "Bats: " + bats;
+
+		if (bats == 0)
+		{
+			var stats = GetNode<PlayerStats>("/root/PlayerStats");
+			stats.MaxHealth--;
+			stats.Health = stats.MaxHealth;
+			GetTree().ChangeScene("res://World.tscn");
+		}
 	}
 }

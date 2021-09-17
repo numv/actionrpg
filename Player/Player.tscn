@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=2]
+[gd_scene load_steps=61 format=2]
 
 [ext_resource path="res://Player/Player.png" type="Texture" id=1]
 [ext_resource path="res://Player/Player.cs" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Music and Sounds/Swipe.wav" type="AudioStream" id=7]
 [ext_resource path="res://Music and Sounds/Evade.wav" type="AudioStream" id=8]
 [ext_resource path="res://WhiteColor.gdshader" type="Shader" id=9]
+[ext_resource path="res://MobileControls.tscn" type="PackedScene" id=10]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 9 )
@@ -829,9 +830,16 @@ shape = SubResource( 48 )
 anims/start = SubResource( 49 )
 anims/stop = SubResource( 50 )
 
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MobileControls" parent="CanvasLayer" instance=ExtResource( 10 )]
+
 [connection signal="OnInvincibilityEnded" from="Hurtbox" to="." method="OnInvincibilityEnded"]
 [connection signal="OnInvincibilityStarted" from="Hurtbox" to="." method="OnInvincibilityStarted"]
 [connection signal="area_entered" from="Hurtbox" to="." method="OnHurtBoxAreaEntered"]
+[connection signal="OnAttack" from="CanvasLayer/MobileControls" to="." method="Mobile_OnAttack"]
+[connection signal="OnMoveVector" from="CanvasLayer/MobileControls" to="." method="Mobile_OnMoveVector"]
+[connection signal="OnRoll" from="CanvasLayer/MobileControls" to="." method="Mobile_OnRoll"]
 
 [editable path="HitboxPivot/SwordHitbox"]
 [editable path="Hurtbox"]
