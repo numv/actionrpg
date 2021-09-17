@@ -16,6 +16,7 @@ public class IntroScene : Node2D
 
 	public void OnRestartPressed()
 	{
+		OS.WindowFullscreen = true;
 		GetTree().ChangeScene("res://World.tscn");
 	}
 }
